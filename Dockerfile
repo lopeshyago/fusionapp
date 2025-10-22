@@ -1,20 +1,23 @@
-# Fase de construção
-FROM node:20-alpine as builder
+# Stage 1: Build
+FROM node:20-alpine AS build
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm ci
+
+# Copy source and build
 COPY . .
 RUN npm run build
 
-# Fase de produção
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-RUN npm ci --production
+# Stage 2: Production - serve with Nginx
+FROM nginx:alpine AS production
 
-# Expõe a porta que o app vai usar
-EXPOSE 3000
+# Copy build output to Nginx html directory
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Comando para iniciar o app
-CMD ["npm", "run", "preview"]
+# Expose HTTP port
+EXPOSE 80
+
+# Default Nginx command
+CMD ["nginx", "-g", "daemon off;"]
