@@ -34,16 +34,16 @@ export default function Layout({ children, currentPageName }) {
     manifestLink.href = '/components/pwa/manifest.webmanifest'; // Corrected manifest path
     document.head.appendChild(manifestLink);
 
-    // Registra o Service Worker para PWA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/components/pwa/sw.js').then(registration => {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, err => {
-          console.log('ServiceWorker registration failed: ', err);
-        });
-      });
-    }
+    // Registra o Service Worker para PWA (temporariamente desabilitado para evitar cache de bundles antigos em produção)
+    // if ('serviceWorker' in navigator) {
+    //   window.addEventListener('load', () => {
+    //     navigator.serviceWorker.register('/components/pwa/sw.js').then(registration => {
+    //       console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    //     }, err => {
+    //       console.log('ServiceWorker registration failed: ', err);
+    //     });
+    //   });
+    // }
 
     // Detectar quando a navegação está acontecendo
     const handleNavigationStart = () => setIsNavigating(true);
