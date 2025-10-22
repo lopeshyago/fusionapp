@@ -16,6 +16,9 @@ FROM nginx:alpine AS production
 # Copy build output to Nginx html directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Copy custom Nginx config with SPA fallback and caching
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Expose HTTP port
 EXPOSE 80
 
